@@ -10,6 +10,9 @@
 */target/**
 .idea/misc.xml
 
+/preprocessed_files/
+/preprocessed_files
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

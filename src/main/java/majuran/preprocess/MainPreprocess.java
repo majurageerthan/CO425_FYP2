@@ -37,6 +37,7 @@ public class MainPreprocess {
         ArrayList<BatchSQLDetail> batchSQLDetails = getDummyDetails();
         for (BatchSQLDetail batchSQLDetail : batchSQLDetails) {
             initJDBCConnectionAndStartPreprocess(batchSQLDetail);
+            batchSQLDetail = null;
         }
 
 
@@ -50,6 +51,7 @@ public class MainPreprocess {
     private static void initJDBCConnectionAndStartPreprocess(BatchSQLDetail batchSQLDetail) {
         try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
             PreprocessByBatchSQLDetail preprocessByBatchSQLDetail = new PreprocessByBatchSQLDetail(batchSQLDetail, stmt);
+            preprocessByBatchSQLDetail.setShouldConsiderUptoMidData(true);
             preprocessByBatchSQLDetail.startPreprocess();
 
         } catch (Exception e) {

@@ -70,6 +70,7 @@ public class PreprocessByBatchSQLDetail {
     private String LOG_DATA_TABLE_NAME;// = "mdl_log";
     private BatchSQLDetail batchSQLDetail;
     private Statement stmt;
+    private boolean shouldConsiderUptoMidData;
 
     public PreprocessByBatchSQLDetail(BatchSQLDetail batchSQLDetail, Statement stmt) {
         this.batchSQLDetail = batchSQLDetail;
@@ -82,6 +83,10 @@ public class PreprocessByBatchSQLDetail {
         GRADES_TABLE_NAME = batchSQLDetail.getFinalGradesTableName();
         GENDER_TABLE_NAME = batchSQLDetail.getGenderTableName();
         BATCH_NAME = batchSQLDetail.getBatchName();
+    }
+
+    public void setShouldConsiderUptoMidData(boolean shouldConsiderUptoMidData) {
+        this.shouldConsiderUptoMidData = shouldConsiderUptoMidData;
     }
 
     public void startPreprocess() throws SQLException, IOException {
@@ -154,9 +159,18 @@ public class PreprocessByBatchSQLDetail {
                 " inner join " + GRADES_TABLE_NAME +
                 " on " + LOG_DATA_TABLE_NAME + "." + STUDENT_CODE_COLUMN_NAME +
                 " = " + GRADES_TABLE_NAME + "." + STUDENT_CODE_COLUMN_NAME;
+        if (shouldConsiderUptoMidData) CREATE_TABLE_SQL += getMidPointQuery();
         System.out.println(CREATE_TABLE_SQL);
         stmt.executeUpdate(CREATE_TABLE_SQL);
 //        printAllResults(stmt);
+    }
+
+    private String getMidPointQuery() {
+//        ResultSet rs = stmt.executeQuery(sql);
+        return " where timecreated < (((select max(timecreated)" +
+                "from " + LOG_DATA_TABLE_NAME +
+                " where objecttable = 'feedback_completed') + " +
+                "(select min(timecreated) from " + LOG_DATA_TABLE_NAME + "))/2)";
     }
 
     //\mod_resource\event\course_module_viewed
