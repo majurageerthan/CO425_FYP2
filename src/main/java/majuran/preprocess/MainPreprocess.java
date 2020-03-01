@@ -23,6 +23,8 @@ public class MainPreprocess {
     private static final String E16_GENDER_TABLE_NAME = "original_data2_0.e16_gender";
 
     public static final String finalFilePath = "preprocessed_files/";
+    public static final String finalArffFilePath = finalFilePath + "arff/";
+
 
     private static MysqlDataSource dataSource = new MysqlDataSource();
 
@@ -37,6 +39,7 @@ public class MainPreprocess {
         ArrayList<BatchSQLDetail> batchSQLDetails = getDummyDetails();
         for (BatchSQLDetail batchSQLDetail : batchSQLDetails) {
             initJDBCConnectionAndStartPreprocess(batchSQLDetail);
+            ChangeCSVToArff.createArrfFrom(batchSQLDetail.getBatchName());
             batchSQLDetail = null;
         }
 
@@ -44,8 +47,11 @@ public class MainPreprocess {
     }
 
     private static void createDirsIfNotExists() {
-        File f = new File(finalFilePath);
-        f.mkdirs();
+        File csvFile = new File(finalFilePath);
+        File arffFile = new File(finalArffFilePath);
+        csvFile.mkdirs();
+        arffFile.mkdirs();
+
     }
 
     private static void initJDBCConnectionAndStartPreprocess(BatchSQLDetail batchSQLDetail) {

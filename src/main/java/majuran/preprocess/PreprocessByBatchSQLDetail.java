@@ -36,7 +36,7 @@ public class PreprocessByBatchSQLDetail {
 
 
     private List<HashMap<String, String>> eventMapArrayList = Arrays.asList(
-//            mod_resource_course_module_viewed,
+            mod_resource_course_module_viewed,
             user_profile_viewed,
             mod_forum_course_module_viewed,
             discussion_viewed,
@@ -50,14 +50,13 @@ public class PreprocessByBatchSQLDetail {
     );
 
     private String[] titleArray = {STUDENT_CODE_COLUMN_NAME,
-            "mod_forum_course_module_viewed",
+            "mod_resource_course_module_viewed",
             "user_profile_viewed",
             "mod_forum_course_module_viewed",
             "discussion_viewed",
             "event_course_viewed",
             "assessable_uploaded",
             "feedback_course_module_viewed",
-            "feedback_response_submitted",
             "feedback_response_submitted",
             "post_created",
             "gender",
