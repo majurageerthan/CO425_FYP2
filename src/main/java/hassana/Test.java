@@ -17,13 +17,16 @@ import weka.core.converters.ConverterUtils;
 import weka.core.converters.ConverterUtils.DataSource;
 
 
-public class test {
+public class Test {
+    public static void main(String[] args) {
+        get_accuracy();
+    }
 
     public static void get_accuracy() {
         try {
             //String arffPath;
-            Instances train = getInstancesFromArff("Testing/e14.arff");
-            Instances test = getInstancesFromArff("Testing/e15.arff");
+            Instances train = getInstancesFromArff("src/main/java/hassana/e14.arff");
+            Instances test = getInstancesFromArff("src/main/java/hassana/e14.arff");
 
             //j48 classifier
             Classifier cls = new J48();

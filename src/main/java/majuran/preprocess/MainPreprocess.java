@@ -4,6 +4,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import majuran.preprocess.model.BatchSQLDetail;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -41,6 +42,18 @@ public class MainPreprocess {
             initJDBCConnectionAndStartPreprocess(batchSQLDetail);
             ChangeCSVToArff.createArrfFrom(batchSQLDetail.getBatchName());
             batchSQLDetail = null;
+        }
+
+        ArrayList<String> trainCSVPathList = new ArrayList<>();
+        trainCSVPathList.add(finalFilePath + "e14.csv");
+        trainCSVPathList.add(finalFilePath + "e15.csv");
+//        trainCSVPathList.add(finalFilePath + "e16.csv");
+
+        try {
+            MergeTogetherHelper.mergeManyCSVFilesIntoOneCSV(trainCSVPathList);
+            ChangeCSVToArff.createArrfFrom("merged");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 

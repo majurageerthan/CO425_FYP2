@@ -18,6 +18,9 @@
 --
 -- Table structure for table `e14_gender`
 --
+CREATE DATABASE IF NOT EXISTS students_log_data_fyp;
+
+use students_log_data_fyp;
 
 DROP TABLE IF EXISTS `e14_gender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

@@ -32,10 +32,12 @@ public class PreprocessByBatchSQLDetail {
     private final HashMap<String, String> feedback_response_submitted = new HashMap<>();
     private final HashMap<String, String> post_created = new HashMap<>();
     private final HashMap<String, String> gender = new HashMap<>();
-    private final HashMap<String, String> final_grades = new HashMap<>();
+    private HashMap<String, String> final_grades = new HashMap<>();
+    private HashMap<String, String> integrated_final_grades = new HashMap<>();
 
 
     private List<HashMap<String, String>> eventMapArrayList = Arrays.asList(
+            gender,
             mod_resource_course_module_viewed,
             user_profile_viewed,
             mod_forum_course_module_viewed,
@@ -45,21 +47,20 @@ public class PreprocessByBatchSQLDetail {
             feedback_course_module_viewed,
             feedback_response_submitted,
             post_created,
-            gender,
-            final_grades
+            integrated_final_grades
     );
 
     private String[] titleArray = {STUDENT_CODE_COLUMN_NAME,
-            "mod_resource_course_module_viewed",
+            "gender",
+            "mod_resource_course_module_viewed",//total view no of course activities.
             "user_profile_viewed",
-            "mod_forum_course_module_viewed",
+            "mod_forum_course_module_viewed", //total view of forums
             "discussion_viewed",
-            "event_course_viewed",
+            "event_course_viewed", //no of course main page viewed
             "assessable_uploaded",
             "feedback_course_module_viewed",
             "feedback_response_submitted",
             "post_created",
-            "gender",
             "final_grades"
     };
 
@@ -114,8 +115,16 @@ public class PreprocessByBatchSQLDetail {
         initPostCreatedMapFromTempTable();
         initGender();
         initFinalGrades();
+        integrateGradesThroughMergeGrades();
         saveResultsToCSV();
 
+    }
+
+    private void integrateGradesThroughMergeGrades() {
+        for (String key : final_grades.keySet()) {
+            String integratedGrade = GradeIntegrateHelper.getIntegratedGrades(final_grades.get(key));
+            integrated_final_grades.put(key, integratedGrade);
+        }
     }
 
     private void initFinalGrades() throws SQLException {
@@ -133,6 +142,7 @@ public class PreprocessByBatchSQLDetail {
     }
 
     private void saveResultsToCSV() throws IOException {
+
         CSVWriter writer = new CSVWriter(
                 new OutputStreamWriter(new FileOutputStream(MainPreprocess.finalFilePath + BATCH_NAME + ".csv"), StandardCharsets.UTF_8),
                 ',',
@@ -149,16 +159,22 @@ public class PreprocessByBatchSQLDetail {
 
 
         ArrayList<String> countValues = new ArrayList<>();
-        for (String key : mod_resource_course_module_viewed.keySet()) {
-            if (!omitStdCode)
+        for (String key : gender.keySet()) {
+            if (!omitStdCode) {
                 countValues.add(key);
+            }
 
             for (HashMap<String, String> hashMap : eventMapArrayList) {
-                countValues.add(hashMap.getOrDefault(key, "0"));
+                if (!final_grades.get(key).equals("NA"))
+                    countValues.add(hashMap.getOrDefault(key, "0"));
             }
-            String[] strings = countValues.toArray(new String[0]);
-            writer.writeNext(strings);
-            countValues.clear();
+
+            if (!countValues.isEmpty()) {
+                String[] strings = countValues.toArray(new String[0]);
+                writer.writeNext(strings);
+                countValues.clear();
+            }
+
         }
 
         writer.close();

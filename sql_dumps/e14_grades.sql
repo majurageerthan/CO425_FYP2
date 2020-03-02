@@ -18,6 +18,7 @@
 --
 -- Table structure for table `e14_grades`
 --
+use students_log_data_fyp;
 
 DROP TABLE IF EXISTS `e14_grades`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

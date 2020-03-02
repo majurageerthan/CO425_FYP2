@@ -18,7 +18,7 @@
 --
 -- Table structure for table `e15_gender`
 --
-
+use students_log_data_fyp;
 DROP TABLE IF EXISTS `e15_gender`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
