@@ -63,6 +63,8 @@ public class PreprocessByBatchSQLDetail {
             "final_grades"
     };
 
+    String[] titleArrayWithoutStdCode = Arrays.copyOfRange(titleArray, 1, titleArray.length);
+
     private String BATCH_NAME;
     private String GENDER_TABLE_NAME;// = "gender";
     private String GRADES_TABLE_NAME;//= "end_grades";
@@ -70,6 +72,7 @@ public class PreprocessByBatchSQLDetail {
     private BatchSQLDetail batchSQLDetail;
     private Statement stmt;
     private boolean shouldConsiderUptoMidData;
+    private boolean omitStdCode;
 
     public PreprocessByBatchSQLDetail(BatchSQLDetail batchSQLDetail, Statement stmt) {
         this.batchSQLDetail = batchSQLDetail;
@@ -86,6 +89,10 @@ public class PreprocessByBatchSQLDetail {
 
     public void setShouldConsiderUptoMidData(boolean shouldConsiderUptoMidData) {
         this.shouldConsiderUptoMidData = shouldConsiderUptoMidData;
+    }
+
+    public void setOmitStdCode(boolean omitStdCode) {
+        this.omitStdCode = omitStdCode;
     }
 
     public void startPreprocess() throws SQLException, IOException {
@@ -134,12 +141,17 @@ public class PreprocessByBatchSQLDetail {
                 CSVWriter.DEFAULT_LINE_END
         );
 
-        writer.writeNext(titleArray);
+        if (omitStdCode) {
+            writer.writeNext(titleArrayWithoutStdCode);
+        } else {
+            writer.writeNext(titleArray);
+        }
 
 
         ArrayList<String> countValues = new ArrayList<>();
         for (String key : mod_resource_course_module_viewed.keySet()) {
-            countValues.add(key);
+            if (!omitStdCode)
+                countValues.add(key);
 
             for (HashMap<String, String> hashMap : eventMapArrayList) {
                 countValues.add(hashMap.getOrDefault(key, "0"));

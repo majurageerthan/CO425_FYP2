@@ -58,6 +58,7 @@ public class MainPreprocess {
         try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
             PreprocessByBatchSQLDetail preprocessByBatchSQLDetail = new PreprocessByBatchSQLDetail(batchSQLDetail, stmt);
             preprocessByBatchSQLDetail.setShouldConsiderUptoMidData(true);
+            preprocessByBatchSQLDetail.setOmitStdCode(true);
             preprocessByBatchSQLDetail.startPreprocess();
 
         } catch (Exception e) {
