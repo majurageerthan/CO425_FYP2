@@ -11,17 +11,17 @@ import java.util.ArrayList;
 
 public class MainPreprocess {
 
-    private static final String E14_LOG_SQL_TABLE_NAME = "original_data.e14_mdl_logstore_2016";
-    private static final String E15_LOG_SQL_TABLE_NAME = "original_data2_0.e15_logs_2017";
-    private static final String E16_LOG_SQL_TABLE_NAME = "original_data2_0.e16_logs_2018";
+    private static final String E14_LOG_SQL_TABLE_NAME = "students_log_data_fyp.e14_mdl_logstore_2016";
+    private static final String E15_LOG_SQL_TABLE_NAME = "students_log_data_fyp.e15_logs_2017";
+    private static final String E16_LOG_SQL_TABLE_NAME = "students_log_data_fyp.e16_logs_2018";
 
-    private static final String E14_FINAL_GRADES_TABLE_NAME = "original_data.e14_grades";
-    private static final String E15_FINAL_GRADES_TABLE_NAME = "original_data.e15_grades";
-    private static final String E16_FINAL_GRADES_TABLE_NAME = "original_data2_0.e16_grades";
+    private static final String E14_FINAL_GRADES_TABLE_NAME = "students_log_data_fyp.e14_grades";
+    private static final String E15_FINAL_GRADES_TABLE_NAME = "students_log_data_fyp.e15_grades";
+    private static final String E16_FINAL_GRADES_TABLE_NAME = "students_log_data_fyp.e16_grades";
 
-    private static final String E14_GENDER_TABLE_NAME = "original_data.e14_gender";
-    private static final String E15_GENDER_TABLE_NAME = "original_data2_0.e15_gender";
-    private static final String E16_GENDER_TABLE_NAME = "original_data2_0.e16_gender";
+    private static final String E14_GENDER_TABLE_NAME = "students_log_data_fyp.e14_gender";
+    private static final String E15_GENDER_TABLE_NAME = "students_log_data_fyp.e15_gender";
+    private static final String E16_GENDER_TABLE_NAME = "students_log_data_fyp.e16_gender";
 
     public static final String finalFilePath = "preprocessed_files/";
     public static final String finalArffFilePath = finalFilePath + "arff/";
@@ -33,9 +33,10 @@ public class MainPreprocess {
     public static void start() {
         dataSource.setUser("user");
         dataSource.setPassword("password");
-        dataSource.setDatabaseName("original_data_3_0_e14_for_testing");
+        dataSource.setDatabaseName("students_log_data_fyp");
 
         createDirsIfNotExists();
+//        GlobalNames.setMergedArffName("e14_e15_merged");
 
         ArrayList<BatchSQLDetail> batchSQLDetails = getDummyDetails();
         for (BatchSQLDetail batchSQLDetail : batchSQLDetails) {
@@ -51,7 +52,7 @@ public class MainPreprocess {
 
         try {
             MergeTogetherHelper.mergeManyCSVFilesIntoOneCSV(trainCSVPathList);
-            ChangeCSVToArff.createArrfFrom("merged");
+            ChangeCSVToArff.createArrfFrom(GlobalNames.mergedArffName);
         } catch (IOException e) {
             e.printStackTrace();
         }

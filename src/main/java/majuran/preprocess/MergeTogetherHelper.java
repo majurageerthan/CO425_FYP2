@@ -31,7 +31,7 @@ public class MergeTogetherHelper {
         }
 
         CSVWriter writer = new CSVWriter(
-                new OutputStreamWriter(new FileOutputStream(MainPreprocess.finalFilePath + "merged.csv"), StandardCharsets.UTF_8),
+                new OutputStreamWriter(new FileOutputStream(MainPreprocess.finalFilePath + GlobalNames.mergedArffName+".csv"), StandardCharsets.UTF_8),
                 ',',
                 CSVWriter.NO_QUOTE_CHARACTER,
                 CSVWriter.DEFAULT_ESCAPE_CHARACTER,

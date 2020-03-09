@@ -64,7 +64,7 @@ public class PreprocessByBatchSQLDetail {
             "final_grades"
     };
 
-    String[] titleArrayWithoutStdCode = Arrays.copyOfRange(titleArray, 1, titleArray.length);
+    private String[] titleArrayWithoutStdCode = Arrays.copyOfRange(titleArray, 1, titleArray.length);
 
     private String BATCH_NAME;
     private String GENDER_TABLE_NAME;// = "gender";
@@ -117,6 +117,27 @@ public class PreprocessByBatchSQLDetail {
         initFinalGrades();
         integrateGradesThroughMergeGrades();
         saveResultsToCSV();
+//        saveGradesCSV();
+
+    }
+
+    private void saveGradesCSV() throws IOException {
+        System.out.println("std_code,actual,integrated");
+
+        CSVWriter writer = new CSVWriter(
+                new OutputStreamWriter(new FileOutputStream(MainPreprocess.finalFilePath + BATCH_NAME + "_grades.csv"), StandardCharsets.UTF_8),
+                ',',
+                CSVWriter.NO_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                CSVWriter.DEFAULT_LINE_END
+        );
+
+        for (String key : final_grades.keySet()) {
+            String[] strings = {key, final_grades.get(key), integrated_final_grades.get(key)};
+            writer.writeNext(strings);
+            System.out.println(key + "," + final_grades.get(key) + "," + integrated_final_grades.get(key));
+        }
+        writer.close();
 
     }
 
