@@ -117,6 +117,9 @@ public class PreprocessByBatchSQLDetail {
         initFinalGrades();
         integrateGradesThroughMergeGrades();
         saveResultsToCSV();
+
+        GradeCounter gradeCounter = new GradeCounter();
+        gradeCounter.countGrade(integrated_final_grades);
 //        saveGradesCSV();
 
     }
@@ -163,7 +166,6 @@ public class PreprocessByBatchSQLDetail {
     }
 
     private void saveResultsToCSV() throws IOException {
-
         CSVWriter writer = new CSVWriter(
                 new OutputStreamWriter(new FileOutputStream(MainPreprocess.finalFilePath + BATCH_NAME + ".csv"), StandardCharsets.UTF_8),
                 ',',
@@ -180,14 +182,16 @@ public class PreprocessByBatchSQLDetail {
 
 
         ArrayList<String> countValues = new ArrayList<>();
-        for (String key : gender.keySet()) {
+        for (String key : integrated_final_grades.keySet()) {
             if (!omitStdCode) {
                 countValues.add(key);
             }
 
             for (HashMap<String, String> hashMap : eventMapArrayList) {
-                if (!final_grades.get(key).equals("NA"))
+                String grade = integrated_final_grades.get(key);
+                if (!grade.equals("D") && !grade.equals("E") && !grade.equals("NA")) {
                     countValues.add(hashMap.getOrDefault(key, "0"));
+                }
             }
 
             if (!countValues.isEmpty()) {
@@ -197,7 +201,6 @@ public class PreprocessByBatchSQLDetail {
             }
 
         }
-
         writer.close();
     }
 
